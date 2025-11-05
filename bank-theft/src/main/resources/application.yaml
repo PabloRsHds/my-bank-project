@@ -2,9 +2,7 @@ spring:
   application:
     name: bank-theft
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_theft
-    username: root
-    password: root
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
