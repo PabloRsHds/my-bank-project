@@ -1,5 +1,6 @@
 [build]
-builder = "NIXPACKS"
+builder = "DOCKERFILE"
+dockerfilePath = "./bank-user/Dockerfile"
 
 [deploy]
 healthcheckPath = "/actuator/health"
@@ -7,40 +8,4 @@ healthcheckTimeout = 100
 
 [[services]]
 name = "bank-user"
-sourceDir = "./bank-user"
 port = 8080
-
-[[services]]
-name = "bank-document"
-sourceDir = './bank-document'
-port = 8081
-
-[[services]]
-name = "bank-theft"
-sourceDir = './bank-theft'
-port = 8082
-
-[[services]]
-name = "bank-card"
-sourceDir = './bank-card'
-port = 8083
-
-[[services]]
-name = "bank-notification"
-sourceDir = './bank-notification'
-port = 8084
-
-[[services]]
-name = "bank-login"
-sourceDir = "./bank-login"
-port = 8085
-
-[[services]]
-name = "bank-wallet"
-sourceDir = "./bank-wallet"
-port = 8086
-
-[[services]]
-name = "email"
-sourceDir = "./email"
-port = 1010
