@@ -2,9 +2,7 @@ spring:
   application:
     name: bank-document
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_document
-    username: root
-    password: root
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
