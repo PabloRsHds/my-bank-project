@@ -17,7 +17,7 @@
         </processorPath>
         <module name="bank-user" />
       </profile>
-      <profile name="Annotation profile for bank-notification" enabled="true">
+      <profile name="Annotation profile for bank-wallet" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -28,8 +28,8 @@
         <module name="bank-wallet" />
         <module name="bank-theft" />
         <module name="bank-notification" />
-        <module name="bank-document" />
         <module name="bank-login" />
+        <module name="bank-document" />
       </profile>
     </annotationProcessing>
   </component>

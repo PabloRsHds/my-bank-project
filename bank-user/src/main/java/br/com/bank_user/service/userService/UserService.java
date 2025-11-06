@@ -208,9 +208,10 @@ public class UserService {
         // Verifica se o código expirou
         if (LocalDateTime.now().isAfter(user.get().getExpireCode())){
             user.get().setCode(null);
+
             var code = String.format("%05d",new Random().nextInt(100000));
 
-            user.get().setCode(request.code());
+            user.get().setCode(code);
             user.get().setExpireCode(LocalDateTime.now().plusMinutes(10));
 
             // Reenvia código expirado com circuit breaker
@@ -226,22 +227,22 @@ public class UserService {
                         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
                     }
             );
-        } else {
-            // Código válido - finaliza verificação
-            user.get().setCode(null);
-            user.get().setExpireCode(null);
-            user.get().setVerifyEmail(true);
-            this.userRepository.save(user.get());
-
-            // Dispara eventos para criação de carteira e email de boas-vindas
-            this.kafkaTemplate.send("creation-wallet-topic",
-                    new CreationWalletEvent(user.get().getUserId()));
-
-            this.kafkaTemplate.send("welcome-topic",
-                    new EventWelcomeUser(user.get().getUserId()));
-
-            return ResponseEntity.ok().body(Map.of("message", "email verified successfully"));
         }
+
+        // Código válido - finaliza verificação
+        user.get().setCode(null);
+        user.get().setExpireCode(null);
+        user.get().setVerifyEmail(true);
+        this.userRepository.save(user.get());
+
+        // Dispara eventos para criação de carteira e email de boas-vindas
+        this.kafkaTemplate.send("creation-wallet-topic",
+                new CreationWalletEvent(user.get().getUserId()));
+
+        this.kafkaTemplate.send("welcome-topic",
+                new EventWelcomeUser(user.get().getUserId()));
+
+        return ResponseEntity.ok().body(Map.of("message", "email verified successfully"));
     }
 
     /**
