@@ -3,7 +3,9 @@ spring:
     name: bank-wallet
 
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://localhost:5432/bank_wallet
+    username: root
+    password: root
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

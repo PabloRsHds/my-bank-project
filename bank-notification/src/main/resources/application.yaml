@@ -2,7 +2,9 @@ spring:
   application:
     name: bank-notification
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://localhost:5432/bank_notification
+    username: root
+    password: root
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
