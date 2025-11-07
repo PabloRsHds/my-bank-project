@@ -87,12 +87,6 @@ public class PaymentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // 2. Verifica saldo
-        if (senderWallet.get().getMoney() < request.money()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("bad_request", "You don't have that money"));
-        }
-
         String userIdDestino = "";
 
         if (CPF_FORMAT.matcher(request.key()).matches()) {
@@ -143,6 +137,12 @@ public class PaymentService {
                     EventSendPayment(token.getName(), userIdDestino, request.money(), request.pixOrCredit()));
 
             return ResponseEntity.ok().build();
+        }
+
+        // 2. Verifica saldo
+        if (senderWallet.get().getMoney() < request.money()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("bad_request", "You don't have that money"));
         }
 
         var sendPayment = new Payment();
