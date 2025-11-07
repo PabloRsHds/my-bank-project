@@ -58,7 +58,7 @@ public class AdmCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Verifica e cria o primeiro administrador (Rodrigo)
-        var adm1 = this.userRepository.findByEmail("rodrigo.s.t.s68@gmail.com");
+        var adm1 = this.userRepository.findByEmail("pablo@gmail.com");
 
         adm1.ifPresentOrElse(
                 // Callback executado se o administrador já existir
@@ -66,30 +66,7 @@ public class AdmCommandLineRunner implements CommandLineRunner {
                 // Callback executado se o administrador não existir (criação)
                 () -> {
                     var userEntity = new User();
-                    userEntity.setCpf("201.987.687-61");
-                    userEntity.setFullName("Rodrigo dos Santos");
-                    userEntity.setEmail("rodrigo.s.t.s68@gmail.com");
-                    userEntity.setPassword(this.passwordEncoder.encode("123456789Rr@"));
-                    userEntity.setPhone("21993666542");
-                    userEntity.setDate(LocalDate.of(2000,12,11));
-                    userEntity.setRole(Role.ADMIN);
-                    userEntity.setStatus(UserStatus.ACTIVE);
-                    userEntity.setVerifyEmail(true);
-                    userEntity.setAuthenticatedClient(true);
-                    this.userRepository.save(userEntity);
-                }
-        );
-
-        // Verifica e cria o segundo administrador (Pablo)
-        var adm2 = this.userRepository.findByEmail("pablo@gmail.com");
-
-        adm2.ifPresentOrElse(
-                // Callback executado se o administrador já existir
-                presente -> System.out.println(" "),
-                // Callback executado se o administrador não existir (criação)
-                () -> {
-                    var userEntity = new User();
-                    userEntity.setCpf("044.744.337-26");
+                    userEntity.setCpf("259.088.550-49");
                     userEntity.setFullName("Pablo dos Santos");
                     userEntity.setEmail("pablo@gmail.com");
                     userEntity.setPassword(this.passwordEncoder.encode("123456789Rr@"));
@@ -98,7 +75,7 @@ public class AdmCommandLineRunner implements CommandLineRunner {
                     userEntity.setRole(Role.ADMIN);
                     userEntity.setStatus(UserStatus.ACTIVE);
                     userEntity.setVerifyEmail(true);
-                    userEntity.setAuthenticatedClient(false);
+                    userEntity.setAuthenticatedClient(true);
                     this.userRepository.save(userEntity);
                 }
         );
