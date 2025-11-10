@@ -1,6 +1,6 @@
 package br.com.bank_card.controller;
 
-import br.com.bank_card.dtos.ResponseUserCard;
+import br.com.bank_card.dtos.card.ResponseUserCard;
 import br.com.bank_card.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package br.com.bank_wallet.kafkaConfig;
 
-import br.com.bank_wallet.dtos.ConsumerSendPaymentEvent;
-import br.com.bank_wallet.dtos.ConsumerWalletEvent;
+import br.com.bank_wallet.dtos.payment.ConsumerSendPaymentEvent;
+import br.com.bank_wallet.dtos.wallet.ConsumerWalletEvent;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -52,7 +52,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerWalletEvent> valueDeserializer =
                 new JsonDeserializer<>(ConsumerWalletEvent.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_wallet.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_wallet.dtos.wallet");
         valueDeserializer.setUseTypeMapperForKey(false);
         valueDeserializer.setRemoveTypeHeaders(false);
 
@@ -94,7 +94,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerSendPaymentEvent> valueDeserializer =
                 new JsonDeserializer<>(ConsumerSendPaymentEvent.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_wallet.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_wallet.dtos.payment");
         valueDeserializer.setUseTypeMapperForKey(false);
         valueDeserializer.setRemoveTypeHeaders(false);
 

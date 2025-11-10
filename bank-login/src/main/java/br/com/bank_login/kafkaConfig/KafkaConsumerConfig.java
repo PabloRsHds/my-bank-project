@@ -1,6 +1,6 @@
 package br.com.bank_login.kafkaConfig;
 
-import br.com.bank_login.dtos.ConsumerDeleteUser;
+import br.com.bank_login.dtos.consumer.ConsumerDeleteUser;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +48,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerDeleteUser> valueDeserializer =
                 new JsonDeserializer<>(ConsumerDeleteUser.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_login.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_login.dtos.consumer");
         valueDeserializer.setUseTypeMapperForKey(false);
         valueDeserializer.setRemoveTypeHeaders(false);
 

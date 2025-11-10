@@ -1,7 +1,7 @@
 package br.com.bank_wallet.consumer;
 
-import br.com.bank_wallet.dtos.ConsumerSendPaymentEvent;
-import br.com.bank_wallet.dtos.EventNotificationPayment;
+import br.com.bank_wallet.dtos.payment.ConsumerSendPaymentEvent;
+import br.com.bank_wallet.dtos.payment.EventNotificationPayment;
 import br.com.bank_wallet.enums.SendOrReceive;
 import br.com.bank_wallet.feign.UserClient;
 import br.com.bank_wallet.models.Payment;
@@ -79,9 +79,9 @@ public class PaymentConsumer {
         wallet.get().setMoney(wallet.get().getMoney() + event.money());
         this.walletRepository.save(wallet.get());
 
-        var fullName = this.userClient.findByNameWithId(event.userReceive());
+        var user = this.userClient.findByUserWithCpfOrPhoneOrEmail(event.userReceive());
         this.kafkaTemplate.send("notification-receive-payment-topic",
-                new EventNotificationPayment(event.userReceive(), fullName, event.money()));
+                new EventNotificationPayment(event.userReceive(), user.fullName(), event.money()));
 
         ack.acknowledge();
     }

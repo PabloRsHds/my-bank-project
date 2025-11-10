@@ -1,9 +1,9 @@
 package br.com.bank_login.services;
 
-import br.com.bank_login.dtos.RequestLoginDto;
-import br.com.bank_login.dtos.RequestTokensDto;
-import br.com.bank_login.dtos.ResponseLoginHistory;
-import br.com.bank_login.dtos.ResponseTokens;
+import br.com.bank_login.dtos.login.RequestLoginDto;
+import br.com.bank_login.dtos.login.RequestTokensDto;
+import br.com.bank_login.dtos.login.ResponseLoginHistory;
+import br.com.bank_login.dtos.login.ResponseTokens;
 import br.com.bank_login.microservices.user.UserClient;
 import br.com.bank_login.model.Login;
 import br.com.bank_login.repository.LoginRepository;
@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -41,6 +42,7 @@ public class LoginService {
 
     private static final Logger log = LoggerFactory.getLogger(LoginService.class);
     private final UserClient userClient;
+    private final PasswordEncoder passwordEncoder;
     private final LoginRepository loginRepository;
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
@@ -57,11 +59,13 @@ public class LoginService {
      */
     public LoginService(UserClient client,
                         LoginRepository repository,
+                        PasswordEncoder passwordEncoder,
                         JwtEncoder jwt,
                         JwtDecoder jwtD,
                         CircuitBreakerFactory<?,?> circuit){
         this.userClient = client;
         this.loginRepository = repository;
+        this.passwordEncoder = passwordEncoder;
         this.jwtEncoder = jwt;
         this.jwtDecoder = jwtD;
         this.circuitBreakerFactory = circuit;
@@ -85,29 +89,28 @@ public class LoginService {
 
         return circuitBreakerFactory.create("loginCB").run(
                 () -> {
-                    var cpf = this.userClient.findByCpf(request.cpf());
-                    var userId = this.userClient.findByIdWithCpf(cpf);
-                    var scopes = this.userClient.findByRoleWithCpf(cpf);
-                    var status = this.userClient.findByStatusWithCpf(cpf);
+                    var user = this.userClient.findUserWithCpf(request.cpf());
 
-                    if (cpf.isBlank()) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(Map.of("message", "Cpf or password is incorrect"));
-                    }
-
-                    if (Objects.equals(status,"BLOCKED")) {
+                    //Verifico se o usuário foi banido
+                    if (Objects.equals(user.status(),"BLOCKED")) {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                 .body(Map.of("unauthorized", "The user has been banned! send an email to the bank to find out why."));
                     }
 
                     //Verifico se o usuário não tem o e-mail verificado.
-                    if (!this.userClient.verifyEmailWithCpf(cpf)){
+                    if (!user.verifyEmail()){
                         return ResponseEntity.status(HttpStatus.CONFLICT)
                                 .body(Map.of("message", "Unverified user"));
                     }
 
-                    //Verifico se o e-mail ou senha estão incorretos
-                    if (!this.userClient.verifyPasswordEncode(request.cpf(), request.password())){
+                    //Verifico se o cpf está incorreto
+                    if (!user.cpf().equals(request.cpf())) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(Map.of("message", "Cpf or password is incorrect"));
+                    }
+
+                    // Verifico se a senha está incorreta
+                    if (!this.passwordEncoder.matches(request.password(), user.password())){
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body(Map.of("message", "Cpf or password is incorrect"));
                     }
@@ -117,21 +120,21 @@ public class LoginService {
 
                     //Criando o token, com apenas 1 hora de validação.
                     var claims = JwtClaimsSet.builder()
-                            .issuer("PICPAY") //nome da aplicação
+                            .issuer("MYBANK") //nome da aplicação
                             .issuedAt(now)//horario que foi criado o token
-                            .subject(userId)//o token vai estar ligado ao id do usuario
+                            .subject(user.userId())//o token vai estar ligado ao id do usuario
                             .expiresAt(expireToken)//o token vai expirar em 1 hora
-                            .claim("scope", scopes)//o token vai ter o scope do usuario
+                            .claim("scope", user.role())//o token vai ter o scope do usuario
                             .build();//criando o token
 
                     var expireRefreshToken = LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.of("-03:00"));
                     //Criando o refresh-token, com 30 dias de validação
                     var claimsRefresh = JwtClaimsSet.builder()
-                            .issuer("BACKEND-LOGIN")
+                            .issuer("MYBANK")
                             .issuedAt(now)
-                            .subject(userId)
+                            .subject(user.userId())
                             .expiresAt(expireRefreshToken)
-                            .claim("scope", scopes)
+                            .claim("scope", user.role())
                             .build();
 
                     //gero o token
@@ -142,7 +145,7 @@ public class LoginService {
 
                     //Crio o loginEntity
                     var loginEntity = new Login();
-                    loginEntity.setUserId(userId);
+                    loginEntity.setUserId(user.userId());
                     this.loginRepository.save(loginEntity);
 
                     return ResponseEntity.ok().body(Map.of("accessToken", accessToken, "refreshToken", accessRefreshToken));
@@ -172,33 +175,28 @@ public class LoginService {
 
         if (refreshToken.getExpiresAt() != null && Instant.now().isBefore(refreshToken.getExpiresAt())) {
 
-            //Obtendo o cpf do token
-            var cpf = this.userClient.findCpfWithId(accessToken.getSubject());
-            //Obtendo o id do usuário com o cpf
-            var userId = this.userClient.findByIdWithCpf(cpf);
-            //Obtendo o scope do usuário com o cpf
-            var scopes = this.userClient.findByRoleWithCpf(cpf);
+            var user = this.userClient.findUserWithId(accessToken.getSubject());
 
             var expireToken = LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
             var now = Instant.now();
 
             //Criando o token, com apenas 1 hora de validação.
             var claims = JwtClaimsSet.builder()
-                    .issuer("PICPAY") //nome da aplicação
+                    .issuer("MYBANK") //nome da aplicação
                     .issuedAt(now)//horario que foi criado o token
-                    .subject(userId)//o token vai estar ligado ao id do usuario
+                    .subject(user.userId())//o token vai estar ligado ao id do usuario
                     .expiresAt(expireToken)//o token vai expirar em 1 hora
-                    .claim("scope", scopes)//o token vai ter o scope do usuario
+                    .claim("scope", user.role())//o token vai ter o scope do usuario
                     .build();//criando o token
 
             var expireRefreshToken = LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.of("-03:00"));
             //Criando o refresh-token, com 30 dias de validação
             var claimsRefresh = JwtClaimsSet.builder()
-                    .issuer("PICPAY")
+                    .issuer("MYBANK")
                     .issuedAt(now)
-                    .subject(userId)
+                    .subject(user.userId())
                     .expiresAt(expireRefreshToken)
-                    .claim("scope", scopes)
+                    .claim("scope", user.role())
                     .build();
 
             //gero o token

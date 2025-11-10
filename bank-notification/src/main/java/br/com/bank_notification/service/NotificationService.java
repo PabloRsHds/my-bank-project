@@ -1,7 +1,7 @@
 package br.com.bank_notification.service;
 
-import br.com.bank_notification.dtos.RequestNotificationId;
-import br.com.bank_notification.dtos.ResponseNotifications;
+import br.com.bank_notification.dtos.notification.RequestNotificationId;
+import br.com.bank_notification.dtos.notification.ResponseNotifications;
 import br.com.bank_notification.model.Notification;
 import br.com.bank_notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package br.com.bank_notification.consumer;
 
-import br.com.bank_notification.dtos.ConsumerDeleteUser;
-import br.com.bank_notification.dtos.ConsumerNotificationEvent;
-import br.com.bank_notification.dtos.ConsumerNotificationReceivePayment;
+import br.com.bank_notification.dtos.user.ConsumerDeleteUser;
+import br.com.bank_notification.dtos.notification.ConsumerNotificationEvent;
+import br.com.bank_notification.dtos.notification.ConsumerNotificationReceivePayment;
 import br.com.bank_notification.model.Notification;
 import br.com.bank_notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

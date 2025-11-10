@@ -1,7 +1,5 @@
 package br.com.bank_user.controller;
 
-import br.com.bank_user.dtos.documents.RequestCreditDocuments;
-import br.com.bank_user.dtos.documents.RequestDocuments;
 import br.com.bank_user.dtos.email.RequestEmailDto;
 import br.com.bank_user.dtos.email.ResendCodeDto;
 import br.com.bank_user.dtos.register_user.RequestUserDto;
@@ -11,12 +9,10 @@ import br.com.bank_user.dtos.update_user.RequestPhoneUpdate;
 import br.com.bank_user.service.userService.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -149,6 +145,18 @@ public class UserController {
     }
 
     /**
+     * Recupera o nome completo do usuário pelo ID
+     *
+     * @param userId ID único do usuário (UUID)
+     * @return Nome completo do usuário ou null se não encontrado
+     * @apiNote Utilizado para exibir informações do usuário logado
+     */
+    @GetMapping("/full-name")
+    public String findByNameWithId(@RequestParam String userId) {
+        return this.userService.findByNameWithId(userId);
+    }
+
+    /**
      * Endpoint para atualizar senha do usuário
      *
      * @param accessToken Token JWT de autenticação
@@ -184,40 +192,6 @@ public class UserController {
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUser(JwtAuthenticationToken token){
         return this.userService.deleteUser(token);
-    }
-
-    /**
-     * Endpoint para envio de documentos para análise de conta/cartão
-     *
-     * @param token Token JWT de autenticação
-     * @param request DTO com documentos e informações pessoais
-     * @return ResponseEntity com confirmação do envio para análise
-     * @throws IOException Em caso de erro no processamento dos arquivos
-     * @consumes MULTIPART_FORM_DATA Para recebimento de arquivos
-     */
-    @PostMapping(value = "/document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> documentsAnalysis(
-            JwtAuthenticationToken token,
-            @ModelAttribute RequestDocuments request
-    ) throws IOException {
-        return this.userService.documentsForAnalysis(token, request);
-    }
-
-    /**
-     * Endpoint para envio de documentos para solicitação de limite de crédito
-     *
-     * @param token Token JWT de autenticação
-     * @param request DTO com documentos e informações profissionais
-     * @return ResponseEntity com confirmação do envio para análise
-     * @throws IOException Em caso de erro no processamento dos arquivos
-     * @consumes MULTIPART_FORM_DATA Para recebimento de arquivos
-     */
-    @PostMapping(value = "/credit-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> creditDocumentsAnalysis(
-            JwtAuthenticationToken token,
-            @ModelAttribute RequestCreditDocuments request
-    ) throws IOException {
-        return this.userService.creditDocumentsForAnalysis(token, request);
     }
     // --------------------------------------------------------------------------------------
 }

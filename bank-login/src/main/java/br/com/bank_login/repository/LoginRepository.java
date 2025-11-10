@@ -4,7 +4,6 @@ import br.com.bank_login.model.Login;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repositório para operações de banco de dados da entidade Login
@@ -15,15 +14,6 @@ import java.util.Optional;
  * @author Pablo R.
  */
 public interface LoginRepository extends JpaRepository<Login, Long> {
-
-    /**
-     * Busca um registro de login pelo ID do usuário
-     * Retorna o último registro de login encontrado para o usuário
-     *
-     * @param userId ID do usuário para busca
-     * @return Optional contendo o registro de login se encontrado
-     */
-    Optional<Login> findByUserId(String userId);
 
     /**
      * Busca todos os registros de login de um usuário específico

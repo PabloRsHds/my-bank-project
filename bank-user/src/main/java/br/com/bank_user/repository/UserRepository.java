@@ -18,12 +18,34 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
 
     /**
+     * Consulta personalizada para buscar usuário por múltiplos identificadores
+     * Realiza busca flexível usando ID, CPF, telefone ou email como critério
+     *
+     * @param key Chave de pesquisa que pode ser:
+     *           - ID único do usuário
+     *           - CPF (formato: 123.456.789-00)
+     *           - Número de telefone
+     *           - Endereço de email (case insensitive)
+     *
+     * @return Optional contendo o usuário se encontrado por qualquer um dos critérios
+     */
+    @Query("""
+        SELECT u FROM User u
+        WHERE u.userId = :key
+           OR u.cpf = :key
+           OR u.phone = :key
+           OR LOWER(u.email) = LOWER(:key)
+    """)
+    Optional<User> findByUserWithIdOrCpfOrPhoneOrEmail(@Param("key") String key);
+
+    /**
      * Busca um usuário pelo número do CPF
      *
      * @param cpf Número do CPF para busca (formato: 000.000.000-00)
      * @return Optional contendo o User se encontrado, ou Optional vazio
      */
     Optional<User> findByCpf(String cpf);
+
 
     /**
      * Busca um usuário pelo endereço de email

@@ -1,6 +1,6 @@
 package br.com.bank_card.service;
 
-import br.com.bank_card.dtos.ResponseUserCard;
+import br.com.bank_card.dtos.card.ResponseUserCard;
 import br.com.bank_card.enums.Status;
 import br.com.bank_card.model.Card;
 import br.com.bank_card.repository.CardRepository;

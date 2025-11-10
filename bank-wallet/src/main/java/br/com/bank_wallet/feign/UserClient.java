@@ -1,5 +1,6 @@
 package br.com.bank_wallet.feign;
 
+import br.com.bank_wallet.dtos.user.ResponseUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,38 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserClient {
 
     /**
-     * Busca o ID único do usuário pelo CPF
+     * Endpoint para busca flexível de usuário por múltiplos identificadores
+     * Permite localizar usuários usando ID, CPF, telefone ou email de forma unificada
      *
-     * @param cpf CPF do usuário para busca
-     * @return String contendo o ID único do usuário
+     * @param key Chave de pesquisa que pode ser:
+     *           - ID único do usuário (UUID)
+     *           - CPF no formato 123.456.789-00
+     *           - Número de telefone com DDD
+     *           - Endereço de email (não diferencia maiúsculas/minúsculas)
+     * @return ResponseUser com dados completos do usuário ou null se não encontrado
      */
-    @GetMapping("/microservice/bank_user/id")
-    String findByIdWithCpf(@RequestParam String cpf);
-
-    /**
-     * Busca o ID único do usuário pelo número de telefone
-     *
-     * @param phone Número de telefone do usuário para busca
-     * @return String contendo o ID único do usuário
-     */
-    @GetMapping("/microservice/bank_user/phone-id")
-    String findByIdWithPhone(@RequestParam String phone);
-
-    /**
-     * Busca o ID único do usuário pelo endereço de email
-     *
-     * @param email Endereço de email do usuário para busca
-     * @return String contendo o ID único do usuário
-     */
-    @GetMapping("/microservice/bank_user/email-id")
-    String findByIdWithEmail(@RequestParam String email);
-
-    /**
-     * Busca o nome completo do usuário pelo ID único
-     *
-     * @param userId ID único do usuário para busca
-     * @return String contendo o nome completo do usuário
-     */
-    @GetMapping("/microservice/bank_user/full-name")
-    String findByNameWithId(@RequestParam String userId);
+    @GetMapping("/microservice/bank_user/get-user-with-id-cpf-phone-email")
+    ResponseUser findByUserWithCpfOrPhoneOrEmail(@RequestParam String key);
 }

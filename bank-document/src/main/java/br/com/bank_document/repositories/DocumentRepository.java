@@ -3,7 +3,6 @@ package br.com.bank_document.repositories;
 import br.com.bank_document.models.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,17 +23,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
      * Optional<Document> document = documentRepository.findByUserId("user-123");
      */
     Optional<Document> findByUserId(String userId);
-
-    /**
-     * Busca todos os documentos cadastrais associados a um usuário
-     *
-     * @param userId ID único do usuário para busca
-     * @return Lista de Documentos do usuário (pode estar vazia)
-     * @implNote Útil para histórico de submissões ou múltiplas versões
-     * @example
-     * List<Document> userDocuments = documentRepository.findAllByUserId("user-123");
-     */
-    List<Document> findAllByUserId(String userId);
 
     /**
      * Remove todos os documentos cadastrais associados a um usuário

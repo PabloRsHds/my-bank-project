@@ -1,15 +1,18 @@
 package br.com.bank_document.controller;
 
-import br.com.bank_document.dtos.RequestApproveDocument;
-import br.com.bank_document.dtos.RequestRejectDocument;
-import br.com.bank_document.dtos.ResponseDocuments;
+import br.com.bank_document.dtos.document.RequestApproveDocument;
+import br.com.bank_document.dtos.document.RequestDocuments;
+import br.com.bank_document.dtos.document.RequestRejectDocument;
+import br.com.bank_document.dtos.document.ResponseDocuments;
 import br.com.bank_document.services.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,17 +39,22 @@ public class DocumentController {
         this.documentService = service;
     }
 
+
     /**
-     * Endpoint para verificar se o usuário possui cartão físico aprovado
+     * Endpoint para envio de documentos para análise de conta/cartão
      *
-     * @param token Token JWT de autenticação contendo ID do usuário
-     * @return ResponseEntity com true se usuário possui cartão aprovado, false caso contrário
-     * @security Acesso restrito a usuários autenticados
-     * @note O endpoint contém uma interrogação no nome, o que é incomum em URIs REST
+     * @param token Token JWT de autenticação
+     * @param request DTO com documentos e informações pessoais
+     * @return ResponseEntity com confirmação do envio para análise
+     * @throws IOException Em caso de erro no processamento dos arquivos
+     * @consumes MULTIPART_FORM_DATA Para recebimento de arquivos
      */
-    @GetMapping("/user-has-card?")
-    public ResponseEntity<Boolean> verifyUserCardPhysical(JwtAuthenticationToken token){
-        return this.documentService.verifyIfUserHasCard(token);
+    @PostMapping(value = "/document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> documentsAnalysis(
+            JwtAuthenticationToken token,
+            @ModelAttribute RequestDocuments request
+    ) throws IOException {
+        return this.documentService.documentsForAnalysis(token, request);
     }
 
     /**

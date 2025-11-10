@@ -1,8 +1,8 @@
 package br.com.bank_document.kafkaConfig;
 
-import br.com.bank_document.dtos.ConsumerCardAnalysis;
-import br.com.bank_document.dtos.ConsumerCreditDocuments;
-import br.com.bank_document.dtos.ConsumerDeleteUser;
+import br.com.bank_document.dtos.document.ConsumerCardAnalysis;
+import br.com.bank_document.dtos.creditDocument.ConsumerCreditDocuments;
+import br.com.bank_document.dtos.user.ConsumerDeleteUser;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +53,7 @@ public class KafkaConsumerConfig {
 
         JsonDeserializer<ConsumerCardAnalysis> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCardAnalysis.class, false);
-        valueDeserializer.addTrustedPackages("br.com.picpay_document.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_document.dtos.document");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -95,7 +95,7 @@ public class KafkaConsumerConfig {
 
         JsonDeserializer<ConsumerCreditDocuments> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCreditDocuments.class, false);
-        valueDeserializer.addTrustedPackages("br.com.picpay_document.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_document.dtos.creditDocument");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -137,7 +137,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerDeleteUser> valueDeserializer =
                 new JsonDeserializer<>(ConsumerDeleteUser.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_document.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_document.dtos.user");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 

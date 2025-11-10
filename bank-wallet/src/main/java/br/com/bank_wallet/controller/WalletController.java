@@ -1,6 +1,6 @@
 package br.com.bank_wallet.controller;
 
-import br.com.bank_wallet.dtos.ResponseWallet;
+import br.com.bank_wallet.dtos.wallet.ResponseWallet;
 import br.com.bank_wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

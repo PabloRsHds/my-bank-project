@@ -1,8 +1,8 @@
 package br.com.bank_notification.kafkaConfig;
 
-import br.com.bank_notification.dtos.ConsumerDeleteUser;
-import br.com.bank_notification.dtos.ConsumerNotificationEvent;
-import br.com.bank_notification.dtos.ConsumerNotificationReceivePayment;
+import br.com.bank_notification.dtos.user.ConsumerDeleteUser;
+import br.com.bank_notification.dtos.notification.ConsumerNotificationEvent;
+import br.com.bank_notification.dtos.notification.ConsumerNotificationReceivePayment;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -52,7 +52,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerNotificationEvent> valueDeserializer =
                 new JsonDeserializer<>(ConsumerNotificationEvent.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_notification.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_notification.dtos.notification");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -93,7 +93,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerNotificationReceivePayment> valueDeserializer =
                 new JsonDeserializer<>(ConsumerNotificationReceivePayment.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_notification.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_notification.dtos.notification");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -133,7 +133,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerDeleteUser> valueDeserializer =
                 new JsonDeserializer<>(ConsumerDeleteUser.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_notification.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_notification.dtos.user");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -156,42 +156,6 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerEventDeleteUser());
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-        return factory;
-    }
-
-    //Factory do delete user
-
-    /**
-     * Factory para consumir mensagens de texto simples
-     * Utilizado para mensagens Kafka com payload do tipo String
-     *
-     * @return ConsumerFactory configurado para mensagens String
-     */
-    @Bean
-    public ConsumerFactory<String, String> consumerEventString() {
-
-        Map<String, Object> props = this.kafkaProperties.buildConsumerProperties();
-
-        return new DefaultKafkaConsumerFactory<>(
-                props,
-                new StringDeserializer(),
-                new StringDeserializer()
-        );
-    }
-
-    /**
-     * Container factory para listeners de mensagens de texto
-     *
-     * @return ContainerFactory configurado para mensagens String
-     */
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerConsumerEventString() {
-
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
-
-        factory.setConsumerFactory(consumerEventString());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

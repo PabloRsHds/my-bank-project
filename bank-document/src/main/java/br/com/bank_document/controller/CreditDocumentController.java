@@ -1,15 +1,18 @@
 package br.com.bank_document.controller;
 
-import br.com.bank_document.dtos.RequestApproveCreditDocument;
-import br.com.bank_document.dtos.RequestRejectCreditDocument;
-import br.com.bank_document.dtos.ResponseCreditDocuments;
+import br.com.bank_document.dtos.creditDocument.RequestApproveCreditDocument;
+import br.com.bank_document.dtos.creditDocument.RequestCreditDocuments;
+import br.com.bank_document.dtos.creditDocument.RequestRejectCreditDocument;
+import br.com.bank_document.dtos.creditDocument.ResponseCreditDocuments;
 import br.com.bank_document.services.creditService.CreditDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +38,25 @@ public class CreditDocumentController {
     public CreditDocumentController(CreditDocumentService service){
         this.creditDocumentService = service;
     }
+
+
+    /**
+     * Endpoint para envio de documentos para solicitação de limite de crédito
+     *
+     * @param token Token JWT de autenticação
+     * @param request DTO com documentos e informações profissionais
+     * @return ResponseEntity com confirmação do envio para análise
+     * @throws IOException Em caso de erro no processamento dos arquivos
+     * @consumes MULTIPART_FORM_DATA Para recebimento de arquivos
+     */
+    @PostMapping(value = "/credit-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, String>> creditDocumentsAnalysis(
+            JwtAuthenticationToken token,
+            @ModelAttribute RequestCreditDocuments request
+    ) throws IOException {
+        return this.creditDocumentService.creditDocumentsForAnalysis(token, request);
+    }
+
 
     /**
      * Endpoint para verificar o status dos documentos de crédito do usuário autenticado

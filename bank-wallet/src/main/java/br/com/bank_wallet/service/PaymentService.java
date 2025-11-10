@@ -1,6 +1,6 @@
 package br.com.bank_wallet.service;
 
-import br.com.bank_wallet.dtos.*;
+import br.com.bank_wallet.dtos.payment.*;
 import br.com.bank_wallet.enums.PixOrCredit;
 import br.com.bank_wallet.enums.SendOrReceive;
 import br.com.bank_wallet.feign.CardClient;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Serviço principal para gerenciamento de pagamentos e transações financeiras
@@ -36,10 +35,6 @@ public class PaymentService {
     private final UserClient userClient;
     private final CardClient cardClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-
-    private static final Pattern CPF_FORMAT = Pattern.compile("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$");
-    private static final Pattern PHONE_FORMAT = Pattern.compile("^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$");
-    private static final Pattern EMAIL_FORMAT = Pattern.compile("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$");
 
     /**
      * Construtor para injeção de dependências do serviço de pagamentos
@@ -87,28 +82,13 @@ public class PaymentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        String userIdDestino = "";
-
-        if (CPF_FORMAT.matcher(request.key()).matches()) {
-            var cpf = request.key();
-            userIdDestino = this.userClient.findByIdWithCpf(cpf);
-        }
-
-        if (PHONE_FORMAT.matcher(request.key()).matches()){
-            var phone = request.key();
-            userIdDestino = this.userClient.findByIdWithPhone(phone);
-        }
-
-        if (EMAIL_FORMAT.matcher(request.key()).matches()) {
-            var email = request.key();
-            userIdDestino = this.userClient.findByIdWithEmail(email);
-        }
-
         if (request.key().isBlank()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        var receiveWallet = walletRepository.findByUserId(userIdDestino);
+        var user = this.userClient.findByUserWithCpfOrPhoneOrEmail(request.key());
+
+        var receiveWallet = walletRepository.findByUserId(user.userId());
 
         if (receiveWallet.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -118,7 +98,7 @@ public class PaymentService {
         if (request.pixOrCredit().equals(PixOrCredit.CREDIT)) {
             var sendPayment = new Payment();
             sendPayment.setUserSend(token.getName());
-            sendPayment.setUserReceive(userIdDestino);
+            sendPayment.setUserReceive(user.userId());
             sendPayment.setMoney(request.money());
             sendPayment.setSendOrReceive(SendOrReceive.SEND);
             sendPayment.setPixOrCredit(request.pixOrCredit());
@@ -134,7 +114,7 @@ public class PaymentService {
             }
 
             this.kafkaTemplate.send("receive-payment-topic", new
-                    EventSendPayment(token.getName(), userIdDestino, request.money(), request.pixOrCredit()));
+                    EventSendPayment(token.getName(), user.userId(), request.money(), request.pixOrCredit()));
 
             return ResponseEntity.ok().build();
         }
@@ -147,7 +127,7 @@ public class PaymentService {
 
         var sendPayment = new Payment();
         sendPayment.setUserSend(token.getName());
-        sendPayment.setUserReceive(userIdDestino);
+        sendPayment.setUserReceive(user.userId());
         sendPayment.setMoney(request.money());
         sendPayment.setSendOrReceive(SendOrReceive.SEND);
         sendPayment.setPixOrCredit(request.pixOrCredit());
@@ -157,7 +137,7 @@ public class PaymentService {
         this.walletRepository.save(senderWallet.get());
 
         this.kafkaTemplate.send("receive-payment-topic", new
-                EventSendPayment(token.getName(), userIdDestino, request.money(), request.pixOrCredit()));
+                EventSendPayment(token.getName(), user.userId(), request.money(), request.pixOrCredit()));
 
         return ResponseEntity.ok().build();
     }

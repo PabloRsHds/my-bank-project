@@ -1,6 +1,11 @@
 package br.com.bank_card.consumer;
 
-import br.com.bank_card.dtos.*;
+import br.com.bank_card.dtos.card.ConsumerCardEvent;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditLimitApproval;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditLimitRejected;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditPayment;
+import br.com.bank_card.dtos.notification.NotificationEvent;
+import br.com.bank_card.dtos.user.ConsumerDeleteUser;
 import br.com.bank_card.enums.Status;
 import br.com.bank_card.enums.TypeCard;
 import br.com.bank_card.model.Card;

@@ -1,9 +1,9 @@
 package br.com.bank_login.controllers;
 
-import br.com.bank_login.dtos.RequestLoginDto;
-import br.com.bank_login.dtos.RequestTokensDto;
-import br.com.bank_login.dtos.ResponseLoginHistory;
-import br.com.bank_login.dtos.ResponseTokens;
+import br.com.bank_login.dtos.login.RequestLoginDto;
+import br.com.bank_login.dtos.login.RequestTokensDto;
+import br.com.bank_login.dtos.login.ResponseLoginHistory;
+import br.com.bank_login.dtos.login.ResponseTokens;
 import br.com.bank_login.services.LoginService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

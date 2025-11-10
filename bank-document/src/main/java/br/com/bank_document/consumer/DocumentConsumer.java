@@ -1,8 +1,8 @@
 package br.com.bank_document.consumer;
 
-import br.com.bank_document.dtos.ConsumerCardAnalysis;
-import br.com.bank_document.dtos.ConsumerCreditDocuments;
-import br.com.bank_document.dtos.ConsumerDeleteUser;
+import br.com.bank_document.dtos.document.ConsumerCardAnalysis;
+import br.com.bank_document.dtos.creditDocument.ConsumerCreditDocuments;
+import br.com.bank_document.dtos.user.ConsumerDeleteUser;
 import br.com.bank_document.enums.Status;
 import br.com.bank_document.models.CreditDocument;
 import br.com.bank_document.models.Document;

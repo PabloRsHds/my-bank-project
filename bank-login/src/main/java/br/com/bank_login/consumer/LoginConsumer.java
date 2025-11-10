@@ -1,8 +1,9 @@
 package br.com.bank_login.consumer;
 
-import br.com.bank_login.dtos.ConsumerDeleteUser;
+import br.com.bank_login.dtos.consumer.ConsumerDeleteUser;
 import br.com.bank_login.repository.LoginRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class LoginConsumer {
      *
      * @param repository Repositório para operações de banco de dados
      */
+    @Autowired
     public LoginConsumer(LoginRepository repository) {
         this.loginRepository = repository;
     }

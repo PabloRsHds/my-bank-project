@@ -43,8 +43,6 @@ public class SecurityConfig {
                     return configuration;
                 }))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/verify-card-physical").permitAll()
-                        .requestMatchers("/api/verify-card-credit").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

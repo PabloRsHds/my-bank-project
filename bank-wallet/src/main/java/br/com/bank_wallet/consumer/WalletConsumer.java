@@ -1,6 +1,6 @@
 package br.com.bank_wallet.consumer;
 
-import br.com.bank_wallet.dtos.ConsumerWalletEvent;
+import br.com.bank_wallet.dtos.wallet.ConsumerWalletEvent;
 import br.com.bank_wallet.models.Wallet;
 import br.com.bank_wallet.repositories.WalletRepository;
 import org.springframework.kafka.annotation.KafkaListener;

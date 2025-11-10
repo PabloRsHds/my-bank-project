@@ -1,22 +1,25 @@
 package br.com.bank_document.services;
 
-import br.com.bank_document.dtos.RequestApproveDocument;
-import br.com.bank_document.dtos.RequestRejectDocument;
-import br.com.bank_document.dtos.ResponseDocuments;
-import br.com.bank_document.dtos.SendCardEvent;
+import br.com.bank_document.dtos.card.SendCardEvent;
+import br.com.bank_document.dtos.document.*;
 import br.com.bank_document.enums.Status;
+import br.com.bank_document.microservice.UserClient;
 import br.com.bank_document.models.Document;
 import br.com.bank_document.repositories.DocumentRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -27,11 +30,13 @@ import java.util.stream.Collectors;
  *
  * @author Pablo R.
  */
+@Slf4j
 @Service
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
-    private final KafkaTemplate<String, SendCardEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final UserClient userClient;
 
     /**
      * Construtor para injeção de dependências
@@ -41,30 +46,70 @@ public class DocumentService {
     @Autowired
     public DocumentService(
             DocumentRepository repository,
-            KafkaTemplate<String, SendCardEvent> kafkaTemplate){
+            KafkaTemplate<String, Object> kafkaTemplate,
+            UserClient userClient){
         this.documentRepository = repository;
         this.kafkaTemplate = kafkaTemplate;
+        this.userClient = userClient;
     }
 
     //*********************************** PAGE 4 - OPERAÇÕES DO USUÁRIO ***********************************
 
-    /**
-     * Verifica se o usuário possui um cartão aprovado com base nos documentos
-     *
-     * @param token Token JWT de autenticação contendo ID do usuário
-     * @return ResponseEntity com true se usuário possui cartão aprovado, false caso contrário
-     * @security Acesso restrito a usuários autenticados
-     * @note Utiliza o ID do usuário extraído do token JWT
-     */
-    public ResponseEntity<Boolean> verifyIfUserHasCard(JwtAuthenticationToken token){
-        Optional<Document> document = this.documentRepository
-                .findByUserId(token.getName());
 
-        if (document.get().getStatus().equals(Status.APPROVED)) {
-            return ResponseEntity.ok(true);
+    /**
+     * Processa documentos para análise de conta
+     * Valida e armazena comprovante de endereço e renda
+     *
+     * @param token Token JWT de autenticação
+     * @param request DTO com documentos e informações pessoais
+     * @return ResponseEntity com confirmação do envio para análise
+     * @throws IOException Em caso de erro no armazenamento dos arquivos
+     * @apiNote Envia documentos para análise via Kafka
+     */
+    public ResponseEntity<Map<String, String>> documentsForAnalysis(
+            JwtAuthenticationToken token,
+            RequestDocuments request
+    ) throws IOException {
+
+        var user = this.userClient.findUserWithId(token.getName());
+        System.out.println(user.toString());
+
+        if (!request.cpf().equals(user.cpf())) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "Bad request", "This CPF was not the one used when creating the account. Process denied."
+            ));
         }
 
-        return ResponseEntity.ok(false);
+        // Valida presença dos arquivos obrigatórios
+        if (request.proofOfAddress().isEmpty() || request.proofOfIncome().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Both files are required."));
+        }
+
+        // Define diretório para upload dos arquivos
+        String uploadDir = "C:\\Users\\rodri\\OneDrive\\Documentos\\negocios\\";
+
+        // Salva comprovante de endereço com nome único
+        File addressFile = new File(uploadDir + UUID.randomUUID() + "_" + request.proofOfAddress().getOriginalFilename());
+        request.proofOfAddress().transferTo(addressFile);
+
+        // Salva comprovante de renda com nome único
+        File incomeFile = new File(uploadDir + UUID.randomUUID() + "_" + request.proofOfIncome().getOriginalFilename());
+        request.proofOfIncome().transferTo(incomeFile);
+
+        // Cria evento com dados para análise
+        var event = new EventDocuments(
+                token.getName(),
+                request.fullName(),
+                request.rg(),
+                request.cpf(),
+                addressFile.getAbsolutePath(),
+                incomeFile.getAbsolutePath()
+        );
+
+        // Envia documentos para análise via Kafka
+        kafkaTemplate.send("documents-analysis-topic", event);
+
+        return ResponseEntity.accepted().body(Map.of("Accepted", "Your data has been sent for analysis"));
     }
 
     /**

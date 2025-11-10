@@ -1,8 +1,8 @@
 package br.com.bank_wallet.controller;
 
-import br.com.bank_wallet.dtos.RequestCreditPayment;
-import br.com.bank_wallet.dtos.RequestPayment;
-import br.com.bank_wallet.dtos.ResponsePayments;
+import br.com.bank_wallet.dtos.payment.RequestCreditPayment;
+import br.com.bank_wallet.dtos.payment.RequestPayment;
+import br.com.bank_wallet.dtos.payment.ResponsePayments;
 import br.com.bank_wallet.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

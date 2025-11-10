@@ -1,10 +1,6 @@
 package br.com.bank_user.service.userService;
 
 import br.com.bank_user.dtos.delete_user.EventDeleteUser;
-import br.com.bank_user.dtos.documents.EventCreditDocuments;
-import br.com.bank_user.dtos.documents.EventDocuments;
-import br.com.bank_user.dtos.documents.RequestCreditDocuments;
-import br.com.bank_user.dtos.documents.RequestDocuments;
 import br.com.bank_user.dtos.email.EmailVerificationEvent;
 import br.com.bank_user.dtos.email.RequestEmailDto;
 import br.com.bank_user.dtos.email.ResendCodeDto;
@@ -30,8 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -345,6 +339,18 @@ public class UserService {
     }
 
     /**
+     * Recupera o nome completo do usuário pelo ID
+     *
+     * @param userId ID único do usuário (UUID)
+     * @return Nome completo do usuário ou null se não encontrado
+     * @apiNote Utilizado para exibir informações do usuário logado
+     */
+    public String findByNameWithId(String userId) {
+        Optional<User> user = this.userRepository.findById(userId);
+        return user.map(User::getFullName).orElse(null);
+    }
+
+    /**
      * Atualiza a senha do usuário com validação da senha antiga
      *
      * @param accessToken Token JWT de autenticação
@@ -418,113 +424,5 @@ public class UserService {
         // Remove usuário do banco de dados
         this.userRepository.deleteById(user.get().getUserId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    /**
-     * Processa documentos para análise de conta
-     * Valida e armazena comprovante de endereço e renda
-     *
-     * @param token Token JWT de autenticação
-     * @param request DTO com documentos e informações pessoais
-     * @return ResponseEntity com confirmação do envio para análise
-     * @throws IOException Em caso de erro no armazenamento dos arquivos
-     * @apiNote Envia documentos para análise via Kafka
-     */
-    public ResponseEntity<Map<String, String>> documentsForAnalysis(
-            JwtAuthenticationToken token,
-            RequestDocuments request
-    ) throws IOException {
-
-        var user = this.userRepository.findById(token.getName());
-
-        if (user.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "Bad request", "This CPF was not the one used when creating the account. Process denied."
-            ));
-        }
-
-        // Valida presença dos arquivos obrigatórios
-        if (request.proofOfAddress().isEmpty() || request.proofOfIncome().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Both files are required."));
-        }
-
-        // Define diretório para upload dos arquivos
-        String uploadDir = "C:\\Users\\rodri\\OneDrive\\Documentos\\negocios\\";
-
-        // Salva comprovante de endereço com nome único
-        File addressFile = new File(uploadDir + UUID.randomUUID() + "_" + request.proofOfAddress().getOriginalFilename());
-        request.proofOfAddress().transferTo(addressFile);
-
-        // Salva comprovante de renda com nome único
-        File incomeFile = new File(uploadDir + UUID.randomUUID() + "_" + request.proofOfIncome().getOriginalFilename());
-        request.proofOfIncome().transferTo(incomeFile);
-
-        // Cria evento com dados para análise
-        var event = new EventDocuments(
-                token.getName(),
-                request.fullName(),
-                request.rg(),
-                request.cpf(),
-                addressFile.getAbsolutePath(),
-                incomeFile.getAbsolutePath()
-        );
-
-        // Envia documentos para análise via Kafka
-        kafkaTemplate.send("documents-analysis-topic", event);
-
-        return ResponseEntity.accepted().body(Map.of("Accepted", "Your data has been sent for analysis"));
-    }
-
-    /**
-     * Processa documentos para análise de crédito
-     * Valida e armazena comprovante de renda e dados profissionais
-     *
-     * @param token Token JWT de autenticação
-     * @param request DTO com documentos e informações profissionais
-     * @return ResponseEntity com confirmação do envio para análise
-     * @throws IOException Em caso de erro no armazenamento dos arquivos
-     * @apiNote Envia dados para análise de limite de crédito via Kafka
-     */
-    public ResponseEntity<Map<String, String>> creditDocumentsForAnalysis(
-            JwtAuthenticationToken token,
-            RequestCreditDocuments request
-    ) throws IOException {
-
-        var user = this.userRepository.findById(token.getName());
-
-        if (user.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "Bad request", "This CPF was not the one used when creating the account. Process denied."
-            ));
-        }
-
-        // Valida presença do comprovante de renda
-        if (request.proofOfIncome().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Income file is required."));
-        }
-
-        // Define diretório para upload do arquivo
-        String uploadDir = "C:\\Users\\rodri\\OneDrive\\Documentos\\negocios\\";
-
-        // Salva comprovante de renda com nome único
-        File incomeFile = new File(uploadDir + UUID.randomUUID() + "_" + request.proofOfIncome().getOriginalFilename());
-        request.proofOfIncome().transferTo(incomeFile);
-
-        // Cria evento com dados para análise de crédito
-        var event = new EventCreditDocuments(
-                token.getName(),
-                request.fullName(),
-                request.cpf(),
-                request.date(),
-                request.occupation(),
-                request.salary(),
-                incomeFile.getAbsolutePath()
-        );
-
-        // Envia dados para análise de crédito via Kafka
-        log.info("Request sent to Kafka: {}", event);
-        kafkaTemplate.send("credit-documents-analysis-topic", event);
-
-        return ResponseEntity.accepted().body(Map.of("Accepted", "Your data has been sent for analysis"));
     }
 }

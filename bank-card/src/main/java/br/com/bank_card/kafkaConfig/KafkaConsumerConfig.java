@@ -1,6 +1,10 @@
 package br.com.bank_card.kafkaConfig;
 
-import br.com.bank_card.dtos.*;
+import br.com.bank_card.dtos.card.ConsumerCardEvent;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditLimitApproval;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditLimitRejected;
+import br.com.bank_card.dtos.cardCredit.ConsumerCreditPayment;
+import br.com.bank_card.dtos.user.ConsumerDeleteUser;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +53,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerCardEvent> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCardEvent.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_card.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_card.dtos.card");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -92,7 +96,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerCreditLimitApproval> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCreditLimitApproval.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_card.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_card.dtos.cardCredit");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -133,7 +137,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerCreditLimitRejected> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCreditLimitRejected.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_card.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_card.dtos.cardCredit");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -175,7 +179,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerCreditPayment> valueDeserializer =
                 new JsonDeserializer<>(ConsumerCreditPayment.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_card.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_card.dtos.cardCredit");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -215,7 +219,7 @@ public class KafkaConsumerConfig {
         JsonDeserializer<ConsumerDeleteUser> valueDeserializer =
                 new JsonDeserializer<>(ConsumerDeleteUser.class, false);
 
-        valueDeserializer.addTrustedPackages("br.com.picpay_card.dtos");
+        valueDeserializer.addTrustedPackages("br.com.bank_card.dtos.user");
         valueDeserializer.setRemoveTypeHeaders(false);
         valueDeserializer.setUseTypeMapperForKey(false);
 
@@ -236,37 +240,6 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, ConsumerDeleteUser> kafkaListenerConsumerDeleteUser() {
         ConcurrentKafkaListenerContainerFactory<String, ConsumerDeleteUser> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerDeleteUser());
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
-        return factory;
-    }
-
-    /**
-     * Factory para consumir mensagens de texto simples
-     * Utilizado para mensagens Kafka com payload simples do tipo String
-     *
-     * @return ConsumerFactory configurado para mensagens String
-     */
-    @Bean
-    public ConsumerFactory<String, String> consumerEventString() {
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-
-        return new DefaultKafkaConsumerFactory<>(
-                props,
-                new StringDeserializer(),
-                new StringDeserializer()
-        );
-    }
-
-    /**
-     * Container factory para listeners de mensagens de texto
-     * Configura acknowledgment manual para controle explícito de commits
-     *
-     * @return ContainerFactory configurado para mensagens String
-     */
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerConsumerEventString() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerEventString());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
