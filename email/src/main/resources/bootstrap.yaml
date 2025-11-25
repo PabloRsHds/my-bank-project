@@ -3,7 +3,7 @@ spring:
     name: email
   mail:
     host: smtp.gmail.com
-    username: ${MAIL_USERNAME}
+    username: paolarshds@gmail.com
     port: 587
     properties:
       mail:
@@ -11,7 +11,7 @@ spring:
           starttls:
             enable: true
           auth: true
-    password: ${MAIL_PASSWORD}
+    password: cron ptxd ssbu orjf
 
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
