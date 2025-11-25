@@ -1,0 +1,415 @@
+<div class="body" [ngClass]="{'body-dark':isDarkTheme}">
+
+  <!-- Header -->
+<header class="header" [ngClass]="{'header-dark':isDarkTheme}">
+  <div class="logo" (click)="return()" translate="no">My-Bank</div>
+  <div class="header-actions" [ngClass]="{'header-actions-dark':isDarkTheme}">
+    <button *ngIf="isDarkTheme == true" class="theme-toggle" [ngClass]="{'theme-toggle-dark':isDarkTheme}" (click)="toggleTheme()">
+      <svg
+        class="sun"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    </button>
+
+    <button *ngIf="isDarkTheme == false" class="theme-toggle" [ngClass]="{'theme-toggle-dark':isDarkTheme}" (click)="toggleTheme()">
+      <svg
+        class="moon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+      </svg>
+    </button>
+
+    <div class="profile-icon"
+    [ngClass]="{'profile-icon-dark':isDarkTheme}"
+    (click)="openSideBarNotifications()"
+    *ngIf="admin == false">
+      <svg
+        class="sino"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span *ngIf=" notificationCount > 0 && notificationCount < 10">{{ notificationCount }}</span>
+      <span *ngIf="notificationCount >= 10">9+</span>
+    </div>
+
+    <div class="profile-icon"
+    [ngClass]="{'profile-icon-dark':isDarkTheme}"
+    (click)="openSidebarMenu = !openSidebarMenu">
+
+    <svg
+      class="menu-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+
+  </div>
+  </div>
+</header>
+
+
+
+  <!-- Sidebar -->
+  <div class="sidebar" [ngClass]="{'sidebar-open': openSidebarMenu}">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Menu</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <ul class="sidebar-list">
+        <li>
+          <button class="sidebar-item" (click)="openModalConfigurationa()">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Configuration</span>
+          </button>
+        </li>
+        <li *ngIf="!clientIsVerified && admin == false">
+          <button type="button" class="sidebar-item" (click)="QrCode()">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>Validation</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-item" (click)="logout()">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Exit</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="close-button" (click)="openSidebarMenu = !openSidebarMenu">Close</button>
+    </div>
+  </div>
+  <!---->
+
+  <!--Side bar notificação-->
+  <div class="sidebar-notification" [ngClass]="{'sidebar-notification-open': openSideBarNotification}">
+    <div>
+      <h2 class="sidebar-card-notification-title">Notifications</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <ul class="sidebar-list">
+        <li>
+          <div style="display: flex; justify-content: center; text-align: center;"
+                *ngFor="let notification of notifications, let id = index">
+            <div class="sidebar-card-notification">
+              <div>
+                <p
+                class="sidebar-card-notification-close"
+                (click)="occultNotification(notification.notificationId)">X</p>
+                <p style="font-size: 18px;">{{notification.message}}</p>
+                <p style="font-size: 12px; margin: 10px 0px 10px 0px;">{{notification.timestamp}}</p>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="close-button" (click)="closeSideBarNotification()">Close</button>
+    </div>
+  </div>
+  <!---->
+
+<!-- Overlay -->
+<div class="overlay" *ngIf="openSidebarMenu" (click)="openSidebarMenu = !openSidebarMenu"></div>
+<div class="overlay" *ngIf="openSideBarNotification" (click)="closeSideBarNotification()"></div>
+<!---->
+
+
+<!-- Corpo -->
+<div class="body-content" [ngClass]="{'body-content-dark':isDarkTheme}">
+  <div style="flex: 1;">
+
+    <header class="content-1-header">
+      <h2>Configurations</h2>
+    </header>
+
+    <div class="content-1">
+
+      <li *ngFor="let item of configList, let i = index">
+
+        <ul (click)="toggleButton(item.id)">
+          <button
+          [ngClass]="{'theme-toggle-dark':isDarkTheme, 'button-pressed': item.pressed}">
+
+          <div class="avatar-user" *ngIf="item.id == 1">
+            <svg
+              class="sidebar-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
+            </svg>
+          </div>
+
+          <div class="avatar-enginer" *ngIf="item.id == 2">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+
+          <div class="avatar-history" *ngIf="item.id == 3">
+            <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"
+                width="20" height="20">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 .49-9.49L1 10"></path>
+              <path d="M12 8v4l3 3"></path>
+            </svg>
+          </div>
+
+          <div class="avatar-exit" *ngIf="item.id == 4">
+            <svg class="sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </div>
+
+            {{item.button}}</button>
+        </ul>
+        <p *ngIf="(i + 1) > 0 && (i + 1) < 2" class="separator"></p>
+        <p *ngIf="(i + 1) > 0 && (i + 1) < 2">Access</p>
+      </li>
+
+    </div>
+
+  </div>
+  <div style="flex: 2;">
+
+    <div class="content-2">
+
+      <div *ngIf="configList[0].pressed">
+
+        <div class="view-profile-header">
+          <h2>Account</h2>
+          <p class="separator"></p>
+        </div>
+
+        <div class="view-profile" [ngClass]="{'view-profile-dark':isDarkTheme}">
+          <div>
+            <p><strong>Name: </strong> {{user.fullName}}</p>
+            <p><strong>CPF: </strong> {{user.cpf}}</p>
+            <p><strong>Email: </strong> {{user.email}}</p>
+            <p><strong>Password: </strong> ***********</p>
+            <p><strong>Date of birth: </strong> {{user.date}}</p>
+            <p><strong>Phone number: </strong> {{user.phone}}</p>
+          </div>
+        </div>
+
+
+        <div class="view-profile-footer" [ngClass]="{'view-profile-footer-dark':isDarkTheme}">
+          <h2>Delete account</h2>
+          <p class="separator"></p>
+          <p>Once you delete your account, there is no going back. Please rest assured.</p>
+          <button (click)="openModalDeleteAccount()" type="button">Delete your account</button>
+        </div>
+
+      </div>
+
+      <div *ngIf="configList[1].pressed">
+
+        <div class="config-update">
+          <div class="update-title">
+            <h2>Sign in methods</h2>
+            <div class="separator" style="margin-bottom: 30px; width: 95%;"></div>
+          </div>
+          <div class="update-container" [ngClass]="{'update-container-dark':isDarkTheme}">
+
+            <div class="update-1" [ngClass]="{'update-1-password': updatePassword}">
+              <div class="update-1-header">
+                <div>
+                  <p>Password</p>
+                  <p class="update-1-spam">Change your password</p>
+                </div>
+
+                <button *ngIf="updatePassword" (click)="updatePassword = !updatePassword">Hide</button>
+              </div>
+
+              <button *ngIf="!updatePassword" (click)="openUpdatePassword()" >Change password</button>
+
+              <div *ngIf="updatePassword">
+
+                <form
+                method="put"
+                [formGroup]="configurationPasswordForm"
+                (ngSubmit)="changePassword()">
+                  <label>Old password</label>
+                  <input type="password" placeholder="***********" formControlName="oldPassword">
+
+                  <label>New password</label>
+                  <input type="password" placeholder="***********" formControlName="password">
+
+                  <label>Confirm password</label>
+                  <input type="password" placeholder="***********" formControlName="confirmPassword">
+
+                  <button type="submit" [disabled]="configurationPasswordForm.invalid">Confirm</button>
+                  <a href="">I forgot my password</a>
+                </form>
+
+              </div>
+            </div>
+
+            <div class="update-2" [ngClass]="{'update-2-phone': updatePhone}">
+              <div class="update-2-header">
+                <div>
+                  <p>Phone</p>
+                  <p class="update-2-spam">Change your phone number</p>
+                </div>
+
+                <button *ngIf="updatePhone" (click)="updatePhone = !updatePhone">Hide</button>
+              </div>
+
+              <button *ngIf="!updatePhone" (click)="openUpdatePhone()">Change phone number</button>
+
+              <div *ngIf="updatePhone">
+
+                <form
+                method="put"
+                [formGroup]="configurationPhoneForm"
+                (ngSubmit)="changePhone()">
+                  <label>New Phone number</label>
+                  <input formControlName="phone" placeholder="(00) 00000-0000" type="text" mask="(00) 00000-0000">
+
+                  <button class="button-phone" type="submit" [disabled]="configurationPhoneForm.invalid">Confirm</button>
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div *ngIf="configList[2].pressed">
+        <div class="login-history-header">
+          <h2>Login history</h2>
+          <p class="separator"></p>
+        </div>
+
+        <div class="login-history" [ngClass]="{'login-history-dark':isDarkTheme}" *ngFor="let history of loginHistory.slice(0, 4)">
+          <li style="list-style: none;" >
+            <ul>Seu último login foi em:
+              <strong>{{ history.timeStamp.slice(0, 10) }} ás {{ history.timeStamp.slice(11, 16) }}</strong></ul>
+          </li>
+        </div>
+
+        <div class="login-history-footer" [ngClass]="{'login-history-footer-dark':isDarkTheme}">
+
+          <div style="display: flex; place-content: center;">
+            <svg class="sidebar-shield" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"
+                width="20" height="20">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+
+          <p style="text-align: center;">Always check your login history regularly to identify suspicious logins.
+            If you encounter any unrecognized activity, immediately change your password and contact support.</p>
+        </div>
+
+      </div>
+
+
+      <div *ngIf="configList[3].pressed">
+        <div class="get-out-header" [ngClass]="{'get-out-header-dark':isDarkTheme}">
+          <h2>Get out of everything</h2>
+          <p class="separator"></p>
+        </div>
+        <div class="get-out-body" [ngClass]="{'get-out-body-dark':isDarkTheme}">
+          <h3>Are you sure you want to log out of everything?</h3>
+          <p>All your devices connected to the app will be disconnected</p>
+          <div style="display: flex; justify-content: center;">
+            <button (click)="getOutAll()">Log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!---->
+
+
+
+
+<div class="modal-delete-account-overlay" *ngIf="deleteAccount">
+  <div class="modal-delete-account" [ngClass]="{'modal-delete-account-dark': isDarkTheme}">
+    <div>
+      <p style="cursor: pointer; text-align: end;" (click)="deleteAccount = !deleteAccount">X</p>
+    </div>
+    <h3>Are you sure you want to delete your account?</h3>
+    <div class="danger">
+      <p>Danger!</p>
+    </div>
+    <p class="separator"></p>
+    <div style="padding: 20px;">
+      <p>This action cannot be undone. Once you delete your account there is no going back. Please rest assured.</p>
+    </div>
+    <div style="display: flex; justify-content: center;">
+      <button (click)="deleteYourAccount()">Delete this account</button>
+    </div>
+  </div>
+</div>

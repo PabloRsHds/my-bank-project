@@ -1,0 +1,59 @@
+<div class="body">
+  <!--Header -->
+  <header>
+    <p> <a (click)="return()"
+          class="name-site"
+          translate="no">
+          My-Bank
+        </a>
+    </p>
+    <div style="display: flex; gap: 15px;">
+      <a *ngIf="showForm == false" type="button" (click)="return()" class="buttonHeader">Login</a>
+      <a *ngIf="showForm == true" type="button" href="my-bank.com.br/login" class="buttonHeader">Login</a>
+    </div>
+  </header>
+  <!------->
+
+  <!--Formulário -->
+  <main *ngIf="this.showForm == true">
+    <form class="form" method="post" (ngSubmit)="confirmCode()" [formGroup]="confirmForm">
+      <div class="info">
+      <span class="title">Two-Factor Verification</span>
+        <p class="description">Enter the two-factor authentication code provided by seu email </p>
+      </div>
+        <div class="input-fields">
+        <input maxlength="1" formControlName="code1" type="tel" placeholder="">
+        <input maxlength="1" formControlName="code2" type="tel" placeholder="">
+        <input maxlength="1" formControlName="code3" type="tel" placeholder="">
+        <input maxlength="1" formControlName="code4" type="tel" placeholder="">
+        <input maxlength="1" formControlName="code5" type="tel" placeholder="">
+        <input maxlength="1" formControlName="code6" type="tel" placeholder="">
+      </div>
+        <div class="action-btns">
+          <button type="submit" class="verify" [disabled]="confirmForm.invalid" >Verify</button>
+          <a (click)="clearCode()" class="clear">Clean</a>
+        </div>
+        <div class="refresh-code">
+          <p class="resend-p">Didn't receive the code?</p>
+          <button type="button" class="resendBtn" (click)="resendCode()">Resend Code</button>
+        </div>
+    </form>
+  </main>
+  <!------->
+
+  <!--QR Code -->
+  <main *ngIf="this.showForm == false">
+    <div class="qr-container">
+      <h2 class="qr-title">Scan the QR Code</h2>
+      <p class="qr-p1">Use your cell phone camera to be</p>
+      <p class="qr-p2"> safely redirected to the app.</p>
+      <img src="assets/images/qr-code.jpg" alt="QR Code for app">
+      <p class="qr-tip">Reading is instant and safe.</p>
+    </div>
+  </main>
+  <!------->
+
+  <!--Footer-->
+  <footer>© 2025 PicPay-fake. All rights reserved.</footer>
+  <!------->
+</div>

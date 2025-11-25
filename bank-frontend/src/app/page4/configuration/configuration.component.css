@@ -1,0 +1,1227 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: #e7e7e7;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #1c1d1d;
+  border-bottom: 1px solid #cccccc31;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  text-indent: 10px;
+  color: #ffffff; /* emerald */
+  cursor: pointer;
+}
+
+.logo:hover {
+  color: #b1b1b1; /* emerald */
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  display: flex;
+  padding: 10px;
+  border: none;
+  background-color: #4a4c4e;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background-color: #686b6d;;
+}
+
+.profile-icon {
+  display: flex;
+  background-color: #4a4c4e;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-icon:hover {
+  background-color: #686b6d;
+}
+
+.profile-icon span {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 100%;
+  position: absolute;
+  background-color: red;
+  color: white;
+  top: 10px;
+  right: 60px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 16rem;
+  background-color: #ffffff;
+  box-shadow: -0.25rem 0 0.5rem rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e5e7eb;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.sidebar-open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.sidebar-nav {
+  margin-top: 1rem;
+  flex: 1;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.sidebar-list > *:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  gap: 0.75rem;
+}
+
+.sidebar-item:hover {
+  background-color: #f3f4f6;
+}
+
+.sidebar-icon {
+  height: 1.25rem;
+  width: 1.25rem;
+  stroke: #374151;
+}
+
+.sidebar-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.close-button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #b9b9b9;
+  border: none;
+  color: #000000;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #929292;
+}
+
+/* Sidebar Notification */
+.sidebar-notification {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 18rem;
+  background-color: #ffffff;
+  box-shadow: -0.25rem 0 0.5rem rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e5e7eb;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.sidebar-notification-open {
+  transform: translateX(0);
+}
+
+/**Notificação**/
+
+.sidebar-card-notification-title {
+  padding: 10px;
+  margin: 20px 0px 50px 0px;
+  text-align: center;
+}
+
+.sidebar-card-notification-body {
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-card-notification {
+  cursor: pointer;
+  background-color: #1f2937;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
+  color: rgb(0, 0, 0);
+}
+
+.sidebar-card-notification .sidebar-card-notification-close {
+  text-align: end;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.sidebar-card-notification .sidebar-card-notification-close:hover {
+  color: rgb(150, 150, 150);
+}
+
+.sidebar-card-notification p{
+  color: rgb(255, 255, 255);
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 40;
+}
+
+/* Body Content */
+.body-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: rgb(236, 236, 236);
+
+  flex: 1; /* Ocupa todo o espaço restante */
+  width: 100%;
+  overflow: auto; /* Adiciona scroll se necessário */
+}
+
+
+
+/* Content 1 */
+
+.content-1-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.content-1-header h2{
+  font-weight: 500;
+}
+
+.content-1 {
+  height: 500px;
+  margin-left: 10px;
+  padding: 20px;
+}
+
+.content-1 h2 {
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
+
+.content-1 li {
+  list-style: none;
+}
+
+.separator {
+  height: 1px;
+  background-color: #a5a5a5;
+  margin: 10px 0px 10px 0px;
+}
+
+.content-1 p {
+  font-size: 10px;
+  font-weight: 500;
+  margin-left: 6px;
+  margin-bottom: 5px;
+}
+
+
+
+.content-1 button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.content-1 button:hover {
+  background-color: #2663be;
+  color: white;
+}
+
+.content-1 .button-pressed {
+  background-color: #2663be;
+  color: white;
+}
+/**/
+
+
+/**View Profile **/
+
+.view-profile-header .separator {
+  width: 95%;
+}
+
+.view-profile {
+  padding: 20px;
+  margin-top: 30px;
+  width: 90%;
+  background-color: transparent;
+  border: 1px solid #acacac;
+  border-radius: 5px;
+}
+
+
+.view-profile p{
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+.view-profile strong{
+  margin-right: 5px;
+  cursor: default;
+}
+
+.view-profile-footer h2{
+  color: rgb(255, 0, 0);
+  margin-top: 80px;
+}
+
+.view-profile-footer .separator{
+  width: 95%;
+  margin: 10px 0px 30px 0px;
+}
+
+.view-profile-footer p{
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.view-profile-footer button{
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid rgb(165, 165, 165);
+  color: red;
+  font-weight: 600;
+}
+
+.view-profile-footer button:hover{
+  background-color: rgb(187, 27, 27);
+  color: white;
+}
+
+/**Content 2**/
+
+.content-2 {
+  height: 500px;
+  margin-left: 20px;
+  padding: 20px;
+}
+
+.content-2 h2 {
+  font-weight: 500;
+}
+
+.update-title {
+  margin-bottom: 10px;
+}
+
+.update-container .update-1 {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  padding: 20px;
+  font-size: 18px;
+  border: 1px solid #a5a5a5;
+  border-radius: 5px 5px 0px 0px;
+}
+
+
+
+.update-container .update-2 {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  padding: 20px;
+  font-size: 18px;
+  border-top: none;
+  border-left: 1px solid #a5a5a5;
+  border-right: 1px solid #a5a5a5;
+  border-bottom: 1px solid #a5a5a5;
+
+  border-radius: 0px 0px 5px 5px;
+}
+
+.update-container .update-1-password {
+  display: block;
+}
+
+.update-container .update-2-phone {
+  display: block;
+}
+
+.update-1-password .update-1-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.update-1-spam {
+  font-size: 10px;
+  color: rgb(0, 0, 0);
+}
+
+.update-2-spam {
+  font-size: 10px;
+  color: rgb(0, 0, 0);
+}
+
+.update-container-dark .update-1-spam {
+  font-size: 10px;
+  color: rgb(167, 167, 167);
+}
+
+.update-container-dark .update-2-spam {
+  font-size: 10px;
+  color: rgb(167, 167, 167);
+}
+
+.update-2-phone .update-2-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.update-1-password label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.update-2-phone label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.update-1-password input {
+  padding: 5px;
+  border: 1px solid #a5a5a5;
+  margin: 5px 0px 5px 0px;
+  border-radius: 5px;
+  width: 300px;
+  font-size: 15px;
+}
+
+.update-1-password input:focus {
+  outline: none;
+  border: 1px solid #123c97;
+}
+
+
+.update-2-phone input {
+  padding: 5px;
+  margin: 5px 0px 5px 0px;
+  border: 1px solid #a5a5a5;
+  border-radius: 5px;
+  width: 300px;
+  font-size: 15px;
+}
+
+.update-2-phone input:focus {
+  outline: none;
+  border: 1px solid #2663BE;
+}
+
+
+.update-1-password button {
+  margin-top: 10px;
+  margin-left: 10%;
+}
+
+.update-1-password form button {
+  padding: 5px;
+}
+
+.update-1-password button:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.update-2-phone button {
+  margin-top: 10px;
+}
+
+.update-2-phone form button {
+  margin-top: 10px;
+  margin-left: 20%;
+  padding: 5px;
+}
+
+.update-1-password a {
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 12px
+}
+
+.update-1-password a:hover {
+  color: #a927d1;
+}
+
+
+.config-update button{
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 5px;
+  border: 1px solid rgb(155, 155, 155);
+  cursor: pointer;
+}
+
+.config-update form button{
+  padding: 5px;
+  width: 100px;
+  margin-left: 7%;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 5px;
+  border: 1px solid rgb(155, 155, 155);
+  cursor: pointer;
+}
+
+.config-update form .button-phone{
+  padding: 5px;
+  width: 100px;
+  margin-left: 15%;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 5px;
+  border: 1px solid rgb(155, 155, 155);
+  cursor: pointer;
+}
+
+.config-update button:hover{
+  background-color: rgb(230, 228, 228);
+}
+
+.update-container input {
+  display: flex;
+}
+
+.update-1 .button-update {
+  display: flex;
+  justify-content: space-between;
+}
+/**/
+
+/**Login History**/
+
+.login-history-header .separator {
+  margin-bottom: 30px;
+  width: 95%;
+}
+
+
+
+.login-history {
+  width: 90%;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #acacac;
+  background-color: transparent;
+}
+
+
+
+.login-history ul{
+  text-align: center;
+}
+
+
+.login-history-footer {
+  padding: 20px;
+  margin-top: 50px;
+  border: 1px solid #acacac;
+  border-radius: 10px;
+  background-color: transparent;
+  width: 90%;
+}
+
+/**/
+
+
+/*Modal deletar conta*/
+
+.modal-delete-account-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.modal-delete-account {
+  background-color: #ffffff;
+  border: 1px solid #afafaf;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 450px;
+  color: rgb(0, 0, 0);
+}
+
+
+
+.modal-delete-account h3 {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.modal-delete-account .danger {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #ff1500;
+  border-bottom: 1px solid #ff1500;
+  border-left: none;
+  border-right: none;
+  background-color: #ffa199;
+}
+
+
+
+.modal-delete-account .danger p {
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+  text-align: center;
+  font-size: 15px;
+}
+
+.modal-delete-account .separator {
+  margin: 30px 0px 10px 45px;
+  width: 80%;
+}
+
+.modal-delete-account p {
+  text-align: justify;
+  font-size: 12px;
+}
+
+.modal-delete-account button {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  color: #F85143;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-delete-account button:hover {
+  background-color: #b91506;
+  color: rgb(255, 255, 255);
+}
+/***/
+
+/**** GET OUT método *****/
+
+.get-out-header .separator {
+  margin-bottom: 30px;
+  width: 95%;
+}
+
+.get-out-body {
+  background-color: transparent;
+  border: 1px solid #acacac;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  padding: 50px;
+  width: 90%;
+}
+
+.get-out-body h3 {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.get-out-body p {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.get-out-body button {
+  margin-top: 20px;
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #979797;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  color: rgb(255, 0, 0);
+}
+
+.get-out-body button:hover {
+  background-color: #b80202;
+  color: white;
+}
+
+
+
+/*********/
+
+
+/* Dark Theme Styles */
+.body-dark {
+  background-color: #111827;
+}
+
+.header-dark {
+  background-color: #111827;
+}
+
+.theme-toggle-dark {
+  background-color: #1F2937;
+}
+
+.theme-toggle-dark:hover {
+  background-color: #9c9c9c4d;
+}
+
+.profile-icon-dark {
+  background-color: #1F2937;
+}
+
+.profile-icon-dark:hover {
+  background-color: #9c9c9c4d;
+}
+
+
+/*Dark body*/
+.body-content-dark {
+  background-color: #111827;
+  color: white;
+}
+
+.body-content-dark .separator {
+  background-color: #92929279;
+}
+
+.body-content-dark p {
+  color: rgb(128, 128, 128);
+}
+
+.body-content-dark button {
+  color: rgb(226, 226, 226);
+}
+
+.body-content-dark button:hover {
+  background-color: #232b38;
+}
+
+.body-content-dark .button-pressed {
+  background-color: #232b38;
+}
+
+
+.view-profile-dark {
+  background-color: #1F2937;
+  border: 1px solid #ffffff24;
+}
+
+.view-profile-dark p{
+  color: rgb(182, 182, 182);
+}
+
+.view-profile-dark strong{
+  color: rgb(240, 240, 240);
+  font-weight: 500;
+}
+
+.view-profile-footer-dark h2{
+  color: #F85143;
+}
+
+.view-profile-footer-dark p{
+  color: #c7c7c7;
+}
+
+.view-profile-footer-dark button{
+  border: 1px solid rgb(61, 61, 61);
+  color: #F85143;
+  background-color: #1F2937;
+}
+
+.view-profile-footer-dark button:hover{
+  border: 1px solid rgb(61, 61, 61);
+  color: rgb(230, 230, 230);
+  background-color: #B62324;
+}
+
+/***/
+
+.update-container-dark .update-1 {
+  background-color: #1F2937;
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-1 {
+  background-color: #1F2937;
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark p{
+  color: rgb(231, 231, 231)
+}
+
+.update-container-dark .update-1 button{
+  color: rgb(231, 231, 231);
+  background-color: #374151;
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-1 button:hover{
+  color: rgb(231, 231, 231);
+  background-color: rgb(48, 57, 71);
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-1-password label {
+  color: rgb(240, 240, 240);
+}
+
+.update-container-dark .update-1-password input {
+  background-color: #374151;
+  border: 1px solid #ffffff24;
+  color: rgb(240, 240, 240);
+}
+
+.update-container-dark .update-1-password input:focus {
+  outline: none;
+  border: 1px solid #0051ff;
+}
+
+.update-container-dark .update-2-phone input:focus {
+  outline: none;
+  border: 1px solid #0051ff;
+}
+
+.update-container-dark .update-1-password a {
+  color: rgb(159, 43, 255);
+}
+
+.update-container-dark .update-1-password a:hover {
+  color: rgb(140, 39, 223);
+}
+
+
+/**/
+.update-container-dark .update-2 {
+  background-color: #1F2937;
+  border-top: none;
+  border-left: 1px solid #ffffff24;
+  border-right: 1px solid #ffffff24;
+  border-bottom: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-2 button{
+  color: rgb(231, 231, 231);
+  background-color: #374151;
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-2 button:hover{
+  color: rgb(231, 231, 231);
+  background-color: rgb(48, 57, 71);
+  border: 1px solid #ffffff24;
+}
+
+.update-container-dark .update-2-phone label {
+  color: rgb(240, 240, 240);
+}
+
+.update-container-dark .update-2-phone input {
+  background-color: #374151;
+  border: 1px solid #ffffff24;
+  color: rgb(240, 240, 240);
+}
+
+
+
+
+/***/
+.login-history-dark {
+  background-color: #1F2937;
+  border: 1px solid #ffffff24;
+}
+
+.login-history-dark ul{
+  color: #bebebe;
+}
+
+.login-history-dark strong{
+  color: #ececec;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.login-history-footer-dark {
+  background-color: #374151;
+  border: 1px solid #ffffff24;
+}
+
+.login-history-footer-dark p {
+  color: rgb(206, 206, 206);
+}
+
+.modal-delete-account-dark {
+  background-color: #1F2937;
+  border: 1px solid #374151;
+  color: rgb(224, 224, 224);
+}
+
+.modal-delete-account-dark h3{
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+}
+
+.modal-delete-account-dark .danger {
+
+  border-top: 1px solid #ec0909;
+  border-bottom: 1px solid #ec0909;
+  border-left: none;
+  border-right: none;
+  background-color: #c91c0c3a;
+}
+
+.modal-delete-account-dark .danger p{
+  color: white;
+}
+
+.modal-delete-account-dark button{
+  background-color: #374151;
+  color: tomato;
+  border: 1px solid #ffffff24;
+}
+
+.modal-delete-account-dark button:hover{
+  background-color: rgb(148, 27, 5);
+  color: white;
+  border: 1px solid #ffffff24;
+}
+
+.get-out-header-dark h2{
+  color: white;
+}
+
+.get-out-body-dark {
+  background-color: #1F2937;
+  border: 1px solid #ffffff24;
+  color: white;
+}
+
+.get-out-body-dark button {
+  background-color: #374151 ;
+  color: tomato;
+  border: 1px solid #ffffff24;
+}
+
+.get-out-body-dark button:hover {
+  background-color: rgb(148, 27, 5);
+  color: white;
+  border: 1px solid #ffffff24;
+}
+
+
+
+/**Avatar **/
+
+.avatar {
+  display: flex;
+  margin-left: 4px;
+  margin-right: 12px;
+}
+
+.avatar-enginer {
+  display: flex;
+}
+
+.avatar-history {
+  display: flex;
+  margin-right: 10px;
+}
+
+.avatar-exit {
+  display: flex;
+  margin-right: 10px;
+}
+
+.avatar-header {
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid rgb(0, 0, 0);
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+}
+
+.avatar-body {
+  background-color: transparent;
+  border: 1px solid rgb(0, 0, 0);
+  border-bottom: none;
+  height: 5px;
+  margin-top: 1px;
+  width: 10px;
+  border-radius: 100px 100px 0px 0px;
+}
+
+.body-content-dark .avatar-header {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.body-content-dark .avatar-body {
+  border: 1px solid rgb(255, 255, 255);
+  border-bottom: none;
+}
+
+.content-1 button:hover .avatar-header {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.content-1 button:hover .avatar-body {
+  border: 1px solid rgb(255, 255, 255);
+  border-bottom: none;
+}
+
+.content-1 .button-pressed .avatar-header {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.content-1 .button-pressed .avatar-body {
+  border: 1px solid rgb(255, 255, 255);
+  border-bottom: none;
+}
+
+
+
+/**Avatar user */
+
+.avatar-user .sidebar-icon{
+  height: 1rem;
+  width: 1rem;
+  margin-right: 10px;
+  stroke: #000000;
+}
+
+.body-content-dark .avatar-user .sidebar-icon {
+  stroke: #c4c4c4;
+}
+
+.content-1 button:hover .avatar-user .sidebar-icon {
+  stroke: #ffffff;
+}
+
+.content-1 .button-pressed .avatar-user .sidebar-icon {
+  stroke: #ffffff;
+}
+
+/**Engrenagem **/
+
+.avatar-enginer .sidebar-icon {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 10px;
+  stroke: #000000;
+}
+
+.body-content-dark .avatar-enginer .sidebar-icon {
+  stroke: #c4c4c4;
+}
+
+.content-1 button:hover .avatar-enginer .sidebar-icon {
+  stroke: #ffffff;
+}
+
+.content-1 .button-pressed .avatar-enginer .sidebar-icon {
+  stroke: #ffffff;
+}
+
+/** Avatar Exit **/
+
+.avatar-exit .sidebar-icon {
+  height: 1rem;
+  width: 1rem;
+  stroke: #000000;
+}
+
+.body-content-dark .avatar-exit .sidebar-icon {
+  stroke: #c4c4c4;
+}
+
+.content-1 button:hover .avatar-exit .sidebar-icon {
+  stroke: #ffffff;
+}
+
+.content-1 .button-pressed .avatar-exit .sidebar-icon {
+  stroke: #ffffff;
+}
+
+
+/*Avatar History */
+
+.avatar-history .sidebar-icon {
+  height: 1rem;
+  width: 1rem;
+  stroke: #111111;
+}
+
+.body-content-dark .avatar-history .sidebar-icon {
+  stroke: #c4c4c4;
+}
+
+.content-1 button:hover .avatar-history .sidebar-icon {
+  stroke: #ffffff;
+}
+
+.content-1 .button-pressed .avatar-history .sidebar-icon {
+  stroke: #ffffff;
+}
+
+
+/*Shield*/
+
+.sidebar-shield {
+  height: 2rem;
+  width: 2rem;
+  stroke: #303030;
+  margin: 10px 0px 10px 0px;
+}
+
+.login-history-footer-dark .sidebar-shield {
+  height: 2rem;
+  width: 2rem;
+  stroke: #eeeeee;
+  margin: 10px 0px 10px 0px;
+}
+
+
+/**Avatar sino**/
+
+.sino {
+  width: 20px;
+  height: 20px;
+  stroke: #ffbf00; /* cor dourada */
+  fill: #ffbf00;
+}
+
+
+/**menu avatar */
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff; /* cor das linhas */
+  cursor: pointer;
+}
+
+/**Sol**/
+
+.sun {
+  width: 20px;
+  height: 20px;
+  stroke: #ffc400; /* cor das linhas */
+  fill: #ffc400; /*cor interna*/
+  cursor: pointer;
+}
+
+/**Luna**/
+
+.moon {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  fill: white;
+  cursor: pointer;
+}
