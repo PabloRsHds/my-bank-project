@@ -144,6 +144,7 @@ header .buttonHeader2{
 }
 
 .container-1 h1 {
+  cursor: default;
   font-size: 2.5rem;
   margin-bottom: 1rem;
   max-width: 600px;
@@ -151,6 +152,7 @@ header .buttonHeader2{
 }
 
 .container-1 p {
+  cursor: default;
   font-size: 17px;
   margin-bottom: 2rem;
   max-width: 400px;
