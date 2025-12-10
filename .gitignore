@@ -3,6 +3,12 @@
 *.env
 email-secret.env
 
+public-key
+private-key
+keys/*
+*.pem
+*.key
+
 # IntelliJ / Eclipse / VSCode
 .idea/
 *.iml
