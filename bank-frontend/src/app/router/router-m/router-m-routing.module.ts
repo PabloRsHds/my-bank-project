@@ -16,7 +16,7 @@ const routes: Routes = [
   {path:'', component: RegisterComponent},
   {path:'confirm-email', component: ConfirmComponent},
   {path:'login', component: LoginComponent},
-  {path:'client', component: ClientComponent, canActivate: [authGuard]},
+  {path:'client', component: ClientComponent},
   {path:'payment', component: PaymentComponent, canActivate: [authGuard]},
   {path:'configuration', component: ConfigurationComponent, canActivate: [authGuard]},
   {path:'adm-works-view-documents', component: ViewDocumentsComponent, canActivate: [authGuard]},

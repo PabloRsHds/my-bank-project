@@ -3,7 +3,7 @@ spring:
     name: bank-login
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_login
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bank_login}
     username: root
     password: root
     driver-class-name: org.postgresql.Driver

@@ -2,7 +2,7 @@ spring:
   application:
     name: bank-theft
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_theft
+    url: ${SPRING_DATASOURCE:jdbc:postgresql://localhost:5432/bank_theft}
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
@@ -31,7 +31,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
     fetch-registry: 'true'
     register-with-eureka: 'true'
   instance:

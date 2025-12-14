@@ -3,7 +3,7 @@ spring:
     name: bank-wallet
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_wallet
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bank_wallet}
     username: root
     password: root
     driver-class-name: org.postgresql.Driver

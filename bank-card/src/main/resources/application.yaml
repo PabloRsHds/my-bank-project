@@ -2,7 +2,7 @@ spring:
   application:
     name: bank-card
   datasource:
-    url: jdbc:postgresql://localhost:5432/bank_card
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bank_card}
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
@@ -33,7 +33,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
     fetch-registry: 'true'
     register-with-eureka: 'true'
   instance:
