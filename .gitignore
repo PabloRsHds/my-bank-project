@@ -2,7 +2,6 @@
 .env
 *.env
 email-secret.env
-bank-frontend/
 public-key
 private-key
 keys/*
