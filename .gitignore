@@ -7,6 +7,7 @@ private-key
 keys/*
 *.pem
 *.key
+README.md
 
 # IntelliJ / Eclipse / VSCode
 .idea/
