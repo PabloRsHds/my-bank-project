@@ -38,31 +38,6 @@ public class ServicesOfMicroservices {
         this.passwordEncoder = password;
     }
 
-    /**
-     * Endpoint para buscar usuário pelo ID único
-     * Retorna dados completos do usuário para integração entre microserviços
-     *
-     * @param userId ID único do usuário para consulta
-     * @return ResponseUser com dados completos do usuário ou null se não encontrado
-     */
-    @GetMapping("/get-user-with-id")
-    public ResponseUser findUserWithId(@RequestParam String userId) {
-        Optional<User> user = this.userRepository.findById(userId);
-
-        return user.map(value -> new ResponseUser(
-                value.getUserId(),
-                value.getCpf(),
-                value.getFullName(),
-                value.getEmail(),
-                value.getPassword(),
-                value.getPhone(),
-                value.getDate(),
-                value.getRole().toString(),
-                value.getStatus().toString(),
-                value.getAuthenticatedClient(),
-                value.getVerifyEmail()
-        )).orElse(null);
-    }
 
     /**
      * Endpoint para buscar usuário pelo CPF

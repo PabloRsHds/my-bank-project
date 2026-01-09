@@ -2,7 +2,6 @@ package br.com.bank_document.services.creditService;
 
 import br.com.bank_document.dtos.creditDocument.*;
 import br.com.bank_document.enums.Status;
-import br.com.bank_document.microservice.UserClient;
 import br.com.bank_document.models.CreditDocument;
 import br.com.bank_document.repositories.CreditDocumentRepository;
 import jakarta.transaction.Transactional;
@@ -34,7 +33,6 @@ public class CreditDocumentService {
 
     private final CreditDocumentRepository creditDocumentRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final UserClient userClient;
 
     /**
      * Construtor para injeção de dependências
@@ -43,11 +41,9 @@ public class CreditDocumentService {
      */
     @Autowired
     public CreditDocumentService(CreditDocumentRepository repository,
-                                 KafkaTemplate<String, Object> kafka,
-                                 UserClient userClient){
+                                 KafkaTemplate<String, Object> kafka){
         this.creditDocumentRepository = repository;
         this.kafkaTemplate = kafka;
-        this.userClient = userClient;
     }
 
 
@@ -65,14 +61,6 @@ public class CreditDocumentService {
             JwtAuthenticationToken token,
             RequestCreditDocuments request
     ) throws IOException {
-
-        var user = this.userClient.findUserWithId(token.getName());
-
-        if (!request.cpf().equals(user.cpf())) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "Bad request", "This CPF was not the one used when creating the account. Process denied."
-            ));
-        }
 
         // Valida presença do comprovante de renda
         if (request.proofOfIncome().isEmpty()) {

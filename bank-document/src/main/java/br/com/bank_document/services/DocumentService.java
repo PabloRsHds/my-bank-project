@@ -3,7 +3,6 @@ package br.com.bank_document.services;
 import br.com.bank_document.dtos.card.SendCardEvent;
 import br.com.bank_document.dtos.document.*;
 import br.com.bank_document.enums.Status;
-import br.com.bank_document.microservice.UserClient;
 import br.com.bank_document.models.Document;
 import br.com.bank_document.repositories.DocumentRepository;
 import jakarta.transaction.Transactional;
@@ -36,7 +35,6 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final UserClient userClient;
 
     /**
      * Construtor para injeção de dependências
@@ -46,11 +44,9 @@ public class DocumentService {
     @Autowired
     public DocumentService(
             DocumentRepository repository,
-            KafkaTemplate<String, Object> kafkaTemplate,
-            UserClient userClient){
+            KafkaTemplate<String, Object> kafkaTemplate){
         this.documentRepository = repository;
         this.kafkaTemplate = kafkaTemplate;
-        this.userClient = userClient;
     }
 
     //*********************************** PAGE 4 - OPERAÇÕES DO USUÁRIO ***********************************
@@ -70,15 +66,6 @@ public class DocumentService {
             JwtAuthenticationToken token,
             RequestDocuments request
     ) throws IOException {
-
-        var user = this.userClient.findUserWithId(token.getName());
-        System.out.println(user.toString());
-
-        if (!request.cpf().equals(user.cpf())) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "Bad request", "This CPF was not the one used when creating the account. Process denied."
-            ));
-        }
 
         // Valida presença dos arquivos obrigatórios
         if (request.proofOfAddress().isEmpty() || request.proofOfIncome().isEmpty()) {
