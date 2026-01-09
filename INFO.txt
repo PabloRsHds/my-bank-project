@@ -1,2 +1,0 @@
-Para funcionar deve colocar as chaves publicas e no login a publica e a privada;
-Adcionar Pageable nos grandes retornos de dados
